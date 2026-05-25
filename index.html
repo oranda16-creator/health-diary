@@ -11,7 +11,1609 @@
   --bd:#2a2a2a;--bd2:#333;
   --t:#f0f0f0;--t2:#999;--t3:#555;
   --ac:#c8f060;--ac2:#a8d040;--acd:rgba(200,240,96,.12);--acd2:rgba(200,240,96,.06);
+  --pro:#60b4f0;--car:#f0a060;--fat:#<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猛健樂日記</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0d0d;--sur:#161616;--sur2:#1e1e1e;--sur3:#252525;
+  --bd:#2a2a2a;--bd2:#333;
+  --t:#f0f0f0;--t2:#999;--t3:#555;
+  --ac:#c8f060;--ac2:#a8d040;--acd:rgba(200,240,96,.12);--acd2:rgba(200,240,96,.06);
   --pro:#60b4f0;--car:#f0a060;--fat:#f06090;
+  --err:#ff6060;--ok:#60d090;--war:#f0c060;
+  --r:12px;--rs:8px;
+  --fn:'Noto Sans TC',sans-serif;--mo:'Space Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t);font-family:var(--fn);min-height:100vh;font-size:14px;line-height:1.6}
+
+/* HEADER */
+.hdr{padding:13px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(13,13,13,.96);backdrop-filter:blur(12px);z-index:100}
+.logo{font-family:var(--mo);font-size:16px;color:var(--ac)}.logo span{color:var(--t2);font-weight:400}
+
+/* INJECT BANNER */
+.inj-banner{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:12px;border-bottom:1px solid var(--bd);transition:background .3s}
+.inj-banner.due{background:rgba(200,240,96,.07);border-bottom-color:var(--ac)}
+.inj-banner.over{background:rgba(255,96,96,.07);border-bottom-color:var(--err)}
+.inj-icon{font-size:17px}
+.inj-info{flex:1}.inj-title{font-weight:500;font-size:13px}.inj-sub{color:var(--t3);font-size:11px;font-family:var(--mo)}
+.inj-btn{padding:5px 13px;border-radius:6px;border:1px solid var(--ac);background:var(--acd);color:var(--ac);font-size:12px;cursor:pointer;font-family:var(--fn);transition:all .15s}
+.inj-btn:hover{background:var(--ac);color:#111}
+
+/* NAV */
+.nav{display:flex;gap:4px;padding:9px 20px;border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nb{padding:6px 13px;border:1px solid var(--bd);background:transparent;color:var(--t2);border-radius:6px;cursor:pointer;font-size:13px;font-family:var(--fn);white-space:nowrap;transition:all .15s}
+.nb:hover{border-color:var(--bd2);color:var(--t)}
+.nb.on{background:var(--acd);border-color:var(--ac);color:var(--ac)}
+
+/* CONTENT */
+.con{padding:18px;max-width:900px;margin:0 auto;width:100%}
+.pg{display:none}.pg.on{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.sec{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);margin-bottom:11px;font-family:var(--mo)}
+
+/* CARD */
+.card{background:var(--sur);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:13px}
+.ctitle{font-size:13px;font-weight:500;color:var(--t2);margin-bottom:13px;display:flex;align-items:center;gap:7px}
+.cdot{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0}
+
+/* DATE NAV */
+.dnav{display:flex;align-items:center;gap:8px;background:var(--sur);border:1px solid var(--bd);border-radius:var(--r);padding:9px 13px;margin-bottom:13px}
+.darr{width:30px;height:30px;border:1px solid var(--bd);border-radius:6px;background:transparent;color:var(--t2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.darr:hover{border-color:var(--ac);color:var(--ac)}.darr:disabled{opacity:.22;cursor:not-allowed}
+.dinfo{flex:1;text-align:center}
+.dlbl{font-family:var(--mo);font-size:13px;color:var(--t);display:block;margin-bottom:4px}
+.dpills{display:flex;align-items:center;justify-content:center;gap:6px}
+.today-pill{font-size:10px;font-family:var(--mo);padding:2px 7px;border-radius:4px;background:var(--acd);color:var(--ac)}
+.dpick{font-size:12px;padding:4px 10px;border:1px solid var(--bd2);border-radius:6px;background:var(--sur2);color:var(--t2);cursor:pointer;font-family:var(--fn)}
+.dpick:hover{border-color:var(--ac);color:var(--ac)}
+
+/* DATE MODAL */
+.dmod-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.dmod-bg.on{display:flex}
+.dmod{background:var(--sur);border:1px solid var(--bd2);border-radius:var(--r);padding:22px;width:100%;max-width:360px}
+.dmod-title{font-size:15px;font-weight:500;margin-bottom:16px}
+.dmod-inp{width:100%;background:var(--sur2);border:1px solid var(--ac);border-radius:var(--rs);padding:11px 14px;color:var(--t);font-size:16px;font-family:var(--mo);outline:none;margin-bottom:12px;cursor:pointer}
+.quick-dates{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.qd-btn{padding:5px 11px;border:1px solid var(--bd);border-radius:6px;background:transparent;color:var(--t2);font-size:12px;cursor:pointer;font-family:var(--fn);transition:all .15s}
+.qd-btn:hover{border-color:var(--ac);color:var(--ac)}
+.qd-btn.sel{border-color:var(--ac);color:var(--ac);background:var(--acd)}
+.dmod-actions{display:flex;gap:8px}
+
+/* STATS */
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:13px}
+.sbox{background:var(--sur2);border:1px solid var(--bd);border-radius:var(--rs);padding:11px}
+.slbl{font-size:11px;color:var(--t3);margin-bottom:4px;font-family:var(--mo)}
+.sval{font-size:19px;font-weight:700;font-family:var(--mo);line-height:1.1}
+.sunit{font-size:11px;font-weight:400;color:var(--t2)}
+.ssub{font-size:11px;color:var(--t3);margin-top:2px}
+.sbox.hi{border-color:var(--ac);background:var(--acd2)}.sbox.hi .sval{color:var(--ac)}
+.sbox.p .sval{color:var(--pro)}.sbox.c .sval{color:var(--car)}.sbox.f .sval{color:var(--fat)}
+
+/* PROGRESS */
+.prow{margin-bottom:9px}
+.phd{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.plbl{color:var(--t2)}.pvl{color:var(--t);font-family:var(--mo)}
+.pbar{height:5px;background:var(--sur3);border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px;transition:width .5s ease}
+.pfa{background:var(--ac)}.pfp{background:var(--pro)}
+
+/* MACRO RING */
+.mvis{display:flex;align-items:center;gap:16px;padding:13px;background:var(--sur2);border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:13px}
+.rw{position:relative;width:74px;height:74px;flex-shrink:0}
+.rw canvas{width:74px;height:74px}
+.rc{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;font-family:var(--mo)}
+.rk{font-size:14px;font-weight:700;color:var(--ac);line-height:1}
+.ru{font-size:9px;color:var(--t3)}
+.leg{flex:1}
+.li{display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:12px}
+.ld{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ln{color:var(--t2);flex:1}.lv{font-family:var(--mo);color:var(--t)}
+.lp{font-family:var(--mo);color:var(--t3);font-size:11px;width:30px;text-align:right}
+
+/* MEAL TABS */
+.mtabs{display:flex;gap:5px;margin-bottom:13px;flex-wrap:wrap}
+.mt{padding:6px 15px;border:1px solid var(--bd);border-radius:6px;cursor:pointer;font-size:13px;font-family:var(--fn);background:transparent;color:var(--t2);transition:all .15s}
+.mt.on{background:var(--sur2);border-color:var(--bd2);color:var(--t)}
+
+/* UPLOAD */
+.upz{border:1.5px dashed var(--bd2);border-radius:var(--r);padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--sur2);position:relative;margin-bottom:0}
+.upz:hover{border-color:var(--ac);background:var(--acd2)}
+.upz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-wrap{display:none;margin-top:10px;position:relative}
+.img-wrap.on{display:block}
+.img-prev{width:100%;max-height:200px;object-fit:cover;border-radius:var(--rs);border:1px solid var(--bd);display:block}
+.img-del{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.img-del:hover{background:var(--err)}
+.img-note{font-size:11px;color:var(--t3);margin-top:5px;text-align:center}
+
+/* MANUAL INPUT */
+.mgrid{display:flex;flex-direction:column;gap:8px;margin-top:13px}.mgrid-row1{display:flex;gap:7px;align-items:flex-end}.mgrid-row2{display:flex;gap:7px;align-items:flex-end}
+.ig .il{font-size:10px;color:var(--t3);margin-bottom:3px;font-family:var(--mo)}
+.inp{width:100%;background:var(--sur2);border:1px solid var(--bd);border-radius:var(--rs);padding:8px 11px;color:var(--t);font-size:13px;font-family:var(--fn);outline:none;transition:border-color .15s}
+.inp:focus{border-color:var(--ac)}.inp::placeholder{color:var(--t3)}
+.inp.sm{padding:7px 10px;font-size:12px}
+textarea.inp{resize:vertical}
+
+/* FOOD LIST */
+.fi{background:var(--sur2);border:1px solid var(--bd);border-radius:var(--rs);padding:11px 13px;display:flex;align-items:center;gap:9px;margin-bottom:7px;animation:fi .2s ease}
+.fth{width:42px;height:42px;border-radius:6px;background:var(--sur3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden}
+.fth img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+.fnm{font-weight:500;font-size:13px;margin-bottom:3px}
+.fmc{display:flex;gap:9px;font-size:11px;font-family:var(--mo);flex-wrap:wrap}
+.mc0{color:var(--t2)}.mc1{color:var(--pro)}.mc2{color:var(--car)}.mc3{color:var(--fat)}
+.fdel{width:26px;height:26px;border:1px solid var(--bd);border-radius:6px;background:transparent;color:var(--t3);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.fdel:hover{border-color:var(--err);color:var(--err)}
+
+/* BUTTONS */
+.btn{padding:8px 17px;background:var(--ac);color:#111;border:none;border-radius:var(--rs);cursor:pointer;font-size:13px;font-weight:700;font-family:var(--fn);white-space:nowrap;transition:all .15s}
+.btn:hover{background:var(--ac2)}.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.sm{padding:7px 13px;font-size:12px}
+.btn.o{background:transparent;color:var(--t2);border:1px solid var(--bd)}
+.btn.o:hover{border-color:var(--ac);color:var(--ac);background:transparent}
+
+/* EXERCISE */
+.ex-types{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px}
+.ec{padding:5px 13px;border:1px solid var(--bd);border-radius:100px;font-size:12px;cursor:pointer;background:transparent;color:var(--t2);font-family:var(--fn);transition:all .15s}
+.ec.on{background:rgba(96,180,240,.12);border-color:var(--pro);color:var(--pro)}
+.egrid{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:7px;align-items:end;margin-bottom:11px}
+.eitem{background:var(--sur2);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 13px;display:flex;align-items:center;gap:9px;margin-bottom:7px;animation:fi .2s ease}
+.eico{font-size:20px;width:34px;text-align:center;flex-shrink:0}
+.einf{flex:1}.enm{font-weight:500;font-size:13px}.emt{font-size:11px;color:var(--t2);font-family:var(--mo)}
+.ecal{font-size:12px;color:var(--ok);font-family:var(--mo);white-space:nowrap}
+
+/* WEIGHT */
+.wgrid{display:flex;gap:8px;margin-bottom:13px;align-items:flex-end;flex-wrap:wrap}
+.chart-w{position:relative;height:180px;margin-bottom:8px}
+.wtbl{width:100%;border-collapse:collapse;font-size:13px}
+.wtbl th{text-align:left;padding:6px 9px;font-size:11px;color:var(--t3);font-family:var(--mo);font-weight:400;border-bottom:1px solid var(--bd)}
+.wtbl td{padding:8px 9px;border-bottom:1px solid var(--bd);color:var(--t2)}
+.wtbl td:first-child{color:var(--t);font-family:var(--mo)}
+.wv{color:var(--ac)!important;font-family:var(--mo)!important;font-size:15px!important}
+.wu{color:var(--err)!important;font-family:var(--mo)!important}
+.wd{color:var(--ok)!important;font-family:var(--mo)!important}
+
+/* GOAL BAR */
+.gbwrap{background:var(--sur2);border:1px solid var(--bd);border-radius:var(--rs);padding:13px;margin-bottom:13px}
+.gbrow{display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;align-items:baseline}
+.gbar{height:8px;background:var(--sur3);border-radius:4px;overflow:hidden}
+.gfill{height:100%;border-radius:4px;transition:width .6s ease;background:linear-gradient(90deg,var(--ok),var(--ac))}
+
+/* HEALTH */
+.schips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
+.sc{padding:5px 12px;border:1px solid var(--bd);border-radius:100px;font-size:12px;cursor:pointer;background:transparent;color:var(--t2);font-family:var(--fn);transition:all .15s}
+.sc.bad{background:rgba(255,96,96,.12);border-color:var(--err);color:var(--err)}
+.sc.mild{background:rgba(240,192,96,.12);border-color:var(--war);color:var(--war)}
+.sc.good{background:rgba(96,208,144,.12);border-color:var(--ok);color:var(--ok)}
+
+/* INJECT LOG */
+.ij{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--bd)}
+.ij-date{font-family:var(--mo);font-size:12px;color:var(--t2);width:78px;flex-shrink:0}
+.ij-info{flex:1;font-size:13px;color:var(--t2)}
+.ij-badge{font-size:10px;font-family:var(--mo);padding:2px 7px;border-radius:4px;background:var(--acd);color:var(--ac)}
+
+/* HISTORY */
+
+/* HISTORY EXPANDABLE */
+.hday{background:var(--sur);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+.hday:hover{border-color:var(--bd2)}
+.hday.open{border-color:var(--ac)}
+.hhd{display:flex;align-items:center;justify-content:space-between;padding:13px 17px;cursor:pointer;flex-wrap:wrap;gap:5px;user-select:none}
+.hhd:hover .hdt{color:var(--t)}
+.h-chevron{font-size:14px;color:var(--t3);transition:transform .25s;flex-shrink:0}
+.hday.open .h-chevron{transform:rotate(180deg)}
+.h-detail{display:none;padding:0 17px 16px;border-top:1px solid var(--bd)}
+.hday.open .h-detail{display:block}
+.h-section{margin-top:13px}
+.h-sec-title{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);font-family:var(--mo);margin-bottom:8px}
+.h-meal-tab{margin-bottom:8px}
+.h-meal-name{font-size:12px;color:var(--t2);margin-bottom:5px;font-weight:500}
+.h-food-row{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--sur2);border-radius:var(--rs);margin-bottom:5px}
+.h-food-thumb{width:32px;height:32px;border-radius:5px;object-fit:cover;flex-shrink:0;background:var(--sur3);display:flex;align-items:center;justify-content:center;font-size:15px;overflow:hidden}
+.h-food-thumb img{width:100%;height:100%;object-fit:cover;border-radius:5px}
+.h-food-name{flex:1;font-size:13px}
+.h-food-mac{font-size:11px;font-family:var(--mo);color:var(--t2)}
+.h-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.h-stat{background:var(--sur2);border-radius:var(--rs);padding:10px;text-align:center}
+.h-stat-v{font-family:var(--mo);font-size:16px;font-weight:700}
+.h-stat-l{font-size:10px;color:var(--t3);margin-top:2px}
+.h-ex-row{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--sur2);border-radius:var(--rs);margin-bottom:5px}
+.h-symp-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+
+.hdt{font-family:var(--mo);font-size:13px;color:var(--t2)}
+.hbdg{display:flex;gap:5px;flex-wrap:wrap}
+.badge{font-size:10px;font-family:var(--mo);padding:2px 7px;border-radius:4px}
+.bc{background:var(--acd);color:var(--ac)}.bp{background:rgba(96,180,240,.12);color:var(--pro)}
+.bs{background:rgba(255,96,96,.12);color:var(--err)}.bo{background:rgba(96,208,144,.12);color:var(--ok)}
+.bw{background:rgba(240,192,96,.12);color:var(--war)}.be{background:rgba(96,180,240,.1);color:var(--pro)}
+
+/* MODAL */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.mbg.on{display:flex}
+.modal{background:var(--sur);border:1px solid var(--bd2);border-radius:var(--r);padding:22px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto}
+.mtit{font-size:15px;font-weight:500;margin-bottom:16px}
+.mr{margin-bottom:11px}.ml{font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px}
+.mact{display:flex;gap:7px;margin-top:16px}
+
+/* DIVIDER */
+hr.dv{border:none;border-top:1px solid var(--bd);margin:13px 0}
+
+/* EMPTY */
+.empty{text-align:center;padding:30px;color:var(--t3);font-size:13px}
+.ei{font-size:30px;margin-bottom:9px}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--ac);color:#111;padding:10px 17px;border-radius:var(--rs);font-size:13px;font-weight:700;transform:translateY(60px);opacity:0;transition:all .28s;z-index:1000;pointer-events:none}
+.toast.on{transform:translateY(0);opacity:1}
+
+
+/* MEASURE */
+.m-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:13px}
+.m-input-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;gap:7px;align-items:end;margin-bottom:13px}
+.m-box{background:var(--sur2);border:1px solid var(--bd);border-radius:var(--rs);padding:13px;position:relative}
+.m-box-lbl{font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:5px}
+.m-box-val{font-size:22px;font-weight:700;font-family:var(--mo);color:var(--ac)}
+.m-box-unit{font-size:11px;color:var(--t2);font-weight:400}
+.m-box-diff{font-size:11px;font-family:var(--mo);margin-top:2px}
+.m-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.m-tbl th{text-align:left;padding:6px 9px;font-size:11px;color:var(--t3);font-family:var(--mo);font-weight:400;border-bottom:1px solid var(--bd)}
+.m-tbl td{padding:8px 9px;border-bottom:1px solid var(--bd);color:var(--t2);font-family:var(--mo);font-size:12px}
+.m-tbl td:first-child{color:var(--t)}
+.m-remind{background:var(--acd2);border:1px solid var(--ac);border-radius:var(--rs);padding:11px 14px;font-size:12px;color:var(--t2);margin-bottom:13px;display:flex;align-items:center;gap:8px}
+
+@media(max-width:600px){
+  .con{padding:13px}.sgrid{grid-template-columns:repeat(2,1fr)}
+  
+  .egrid{grid-template-columns:1fr 1fr}.wgrid{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div style="display:flex;flex-direction:column;min-height:100vh">
+
+<header class="hdr">
+  <div class="logo">猛健樂<span> / 日記</span></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div style="font-family:var(--mo);font-size:11px;color:var(--t3)" id="hdr-date"></div>
+    <button onclick="exportData()" style="padding:4px 10px;border:1px solid var(--bd2);border-radius:6px;background:transparent;color:var(--t2);font-size:11px;cursor:pointer;font-family:var(--mo)" title="匯出資料">⬇ 匯出</button>
+    <label style="padding:4px 10px;border:1px solid var(--bd2);border-radius:6px;background:transparent;color:var(--t2);font-size:11px;cursor:pointer;font-family:var(--mo)" title="匯入資料">⬆ 匯入<input type="file" accept=".json,application/json,text/plain,*/*" onchange="importData(event)" style="display:none"></label>
+  </div>
+</header>
+
+<div class="inj-banner" id="inj-banner">
+  <div class="inj-icon">💉</div>
+  <div class="inj-info">
+    <div class="inj-title" id="inj-title">載入中...</div>
+    <div class="inj-sub" id="inj-sub"></div>
+  </div>
+  <button class="inj-btn" onclick="logToday()">記錄今日注射</button>
+</div>
+
+<nav class="nav">
+  <button class="nb on" onclick="goPage('today',this)">📋 今日</button>
+  <button class="nb" onclick="goPage('weight',this)">⚖️ 體重</button>
+  <button class="nb" onclick="goPage('exercise',this)">🏃 運動</button>
+  <button class="nb" onclick="goPage('health',this)">🩺 健康</button>
+  <button class="nb" onclick="goPage('inject',this)">💉 注射</button>
+  <button class="nb" onclick="goPage('measure',this)">📏 圍度</button>
+  <button class="nb" onclick="goPage('history',this)">📅 歷史</button>
+</nav>
+
+<main class="con">
+
+<!-- ===== TODAY ===== -->
+<div class="pg on" id="pg-today">
+  <div class="dnav">
+    <button class="darr" id="mp" onclick="shiftDate('meal',-1)">‹</button>
+    <div class="dinfo">
+      <span class="dlbl" id="m-lbl"></span>
+      <div class="dpills">
+        <span class="today-pill" id="m-today" style="display:none">今日</span>
+        <button class="dpick" onclick="openDM('meal')">📅 選日期</button>
+      </div>
+    </div>
+    <button class="darr" id="meal-next" onclick="shiftDate('meal',1)">›</button>
+  </div>
+
+  <div class="sec">當日總覽</div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sbox hi"><div class="slbl">已攝取</div><div class="sval" id="tc">0<span class="sunit">kcal</span></div><div class="ssub" id="trem"></div></div>
+    <div class="sbox p"><div class="slbl">蛋白質</div><div class="sval" id="tp">0<span class="sunit">g</span></div><div class="ssub" id="tp-s"></div></div>
+    <div class="sbox c"><div class="slbl">碳水</div><div class="sval" id="tca">0<span class="sunit">g</span></div><div class="ssub" id="tca-s"></div></div>
+  </div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sbox f"><div class="slbl">脂肪</div><div class="sval" id="tf">0<span class="sunit">g</span></div><div class="ssub" id="tf-s"></div></div>
+    <div class="sbox" style="border-color:#f0c060;background:rgba(240,192,96,.06)"><div class="slbl">糖</div><div class="sval" id="tsu" style="color:#f0c060">0<span class="sunit">g</span></div><div class="ssub" id="tsu-s"></div></div>
+    <div class="sbox"><div class="slbl">淨攝取</div><div class="sval" id="tnet" style="color:var(--t2)">0<span class="sunit">kcal</span></div><div class="ssub" id="tnet-s"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="mvis">
+      <div class="rw"><canvas id="donut" width="74" height="74"></canvas><div class="rc"><div class="rk" id="rk">0</div><div class="ru">kcal</div></div></div>
+      <div class="leg">
+        <div class="li"><div class="ld" style="background:var(--pro)"></div><span class="ln">蛋白質</span><span class="lv" id="lp">0g</span><span class="lp" id="lpp">0%</span></div>
+        <div class="li"><div class="ld" style="background:var(--car)"></div><span class="ln">碳水</span><span class="lv" id="lc">0g</span><span class="lp" id="lcp">0%</span></div>
+        <div class="li"><div class="ld" style="background:var(--fat)"></div><span class="ln">脂肪</span><span class="lv" id="lf">0g</span><span class="lp" id="lfp">0%</span></div>
+      </div>
+    </div>
+    <div class="prow">
+      <div class="phd"><span class="plbl">熱量目標（1450 kcal）</span><span class="pvl" id="cpct">0%</span></div>
+      <div class="pbar"><div class="pfill pfa" id="bca" style="width:0%"></div></div>
+    </div>
+    <div class="prow">
+      <div class="phd"><span class="plbl" style="color:var(--pro)">蛋白質（目標 ≥120g）</span><span class="pvl" id="ppct">0%</span></div>
+      <div class="pbar"><div class="pfill pfp" id="bpr" style="width:0%"></div></div>
+    </div>
+    <div class="prow">
+      <div class="phd"><span class="plbl" style="color:var(--car)">碳水（上限 80g）</span><span class="pvl" id="cabpct">0%</span></div>
+      <div class="pbar"><div class="pfill" id="bcab" style="width:0%;background:var(--car)"></div></div>
+    </div>
+    <div class="prow">
+      <div class="phd"><span class="plbl" style="color:#f0c060">糖（上限 25g）</span><span class="pvl" id="supct">0%</span></div>
+      <div class="pbar"><div class="pfill" id="bsu" style="width:0%;background:#f0c060"></div></div>
+    </div>
+    <div class="prow">
+      <div class="phd"><span class="plbl" style="color:var(--fat)">脂肪（上限 50g）</span><span class="pvl" id="fatpct">0%</span></div>
+      <div class="pbar"><div class="pfill" id="bfat" style="width:0%;background:var(--fat)"></div></div>
+    </div>
+  </div>
+
+  <div class="sec">飲食紀錄</div>
+  <div class="mtabs">
+    <button class="mt on" onclick="switchMeal('breakfast',this)">🌅 早餐</button>
+    <button class="mt" onclick="switchMeal('lunch',this)">☀️ 午餐</button>
+    <button class="mt" onclick="switchMeal('dinner',this)">🌙 晚餐</button>
+    <button class="mt" onclick="switchMeal('snack',this)">🍎 點心</button>
+  </div>
+
+  <div class="card">
+    <!-- Photo upload (visual record only) -->
+    <div class="upz" onclick="document.getElementById('fup').click()">
+      <input type="file" id="fup" accept="image/*" style="display:none" onchange="handlePhoto(event)">
+      <div style="font-size:24px;margin-bottom:5px">📷</div>
+      <div style="color:var(--t2);font-size:13px">上傳餐食照片（視覺紀錄）</div>
+      <div style="color:var(--t3);font-size:11px;margin-top:2px">點擊選擇照片</div>
+    </div>
+    <div class="img-wrap" id="img-wrap">
+      <img id="img-prev" class="img-prev" src="" alt="">
+      <button class="img-del" onclick="clearPhoto()" title="移除照片">✕</button>
+      <div class="img-note">📌 照片已載入 — 請用下方手動填寫營養數值</div>
+    </div>
+
+    <hr class="dv">
+
+    <!-- Manual input -->
+    <div style="font-size:12px;color:var(--t3);margin-bottom:9px">✏️ 手動輸入食物</div>
+    <div class="mgrid">
+      <div class="mgrid-row1">
+        <div class="ig" style="flex:1">
+          <div class="il">食物名稱</div>
+          <input class="inp sm" id="f-name" placeholder="例：雞胸肉便當、水煮蛋">
+        </div>
+      </div>
+      <div class="mgrid-row2">
+        <div class="ig" style="flex:1">
+          <div class="il">熱量(kcal)</div>
+          <input class="inp sm" type="number" id="mk" placeholder="500" min="0">
+        </div>
+        <div class="ig" style="flex:1">
+          <div class="il">蛋白質(g)</div>
+          <input class="inp sm" type="number" id="mpr" placeholder="30" min="0">
+        </div>
+        <div class="ig" style="flex:1">
+          <div class="il">碳水(g)</div>
+          <input class="inp sm" type="number" id="mca" placeholder="60" min="0">
+        </div>
+        <div class="ig" style="flex:1">
+          <div class="il">糖(g)</div>
+          <input class="inp sm" type="number" id="msu" placeholder="5" min="0">
+        </div>
+        <div class="ig" style="flex:1">
+          <div class="il">脂肪(g)</div>
+          <input class="inp sm" type="number" id="mfa" placeholder="10" min="0">
+        </div>
+        <button class="btn sm" onclick="addFood()" style="align-self:flex-end;height:36px;flex-shrink:0">新增</button>
+      </div>
+    </div>
+
+    <div id="food-list" style="margin-top:10px"></div>
+    <div class="empty" id="meal-empty"><div class="ei">🍽️</div>還沒有紀錄</div>
+  </div>
+</div>
+
+<!-- ===== WEIGHT ===== -->
+<div class="pg" id="pg-weight">
+  <div class="sec">體重追蹤</div>
+  <div class="gbwrap">
+    <div class="gbrow">
+      <span style="color:var(--t2)">目標體重進度</span>
+      <span style="font-family:var(--mo);font-size:13px"><span id="gw-cur" style="color:var(--ac)">—</span> → <span style="color:var(--t2)">70 kg</span></span>
+    </div>
+    <div class="gbar"><div class="gfill" id="gw-fill" style="width:0%"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-top:5px;font-family:var(--mo)">
+      <span id="gw-s">起始</span><span id="gw-r" style="color:var(--ok)"></span><span>目標 70kg</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle"><div class="cdot"></div>新增體重</div>
+    <div class="wgrid">
+      <div style="flex:1;min-width:110px"><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">體重（kg）</div><input class="inp" type="number" id="wv" placeholder="65.5" step="0.1"></div>
+      <div style="flex:1;min-width:130px"><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">日期</div><input class="inp" type="date" id="wd"></div>
+      <div style="flex:1;min-width:140px"><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">備註</div><input class="inp" id="wn" placeholder="早晨空腹"></div>
+      <button class="btn" onclick="addWeight()" style="align-self:flex-end">紀錄</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle"><div class="cdot"></div>體重趨勢</div>
+    <div class="chart-w"><canvas id="wchart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="ctitle"><div class="cdot"></div>紀錄歷史</div>
+    <table class="wtbl"><thead><tr><th>日期</th><th>體重</th><th>變化</th><th>備註</th><th></th></tr></thead><tbody id="wtbody"></tbody></table>
+    <div class="empty" id="w-empty" style="display:none"><div class="ei">⚖️</div>還沒有體重紀錄</div>
+  </div>
+</div>
+
+<!-- ===== EXERCISE ===== -->
+<div class="pg" id="pg-exercise">
+  <div class="dnav">
+    <button class="darr" id="ep" onclick="shiftDate('ex',-1)">‹</button>
+    <div class="dinfo">
+      <span class="dlbl" id="e-lbl"></span>
+      <div class="dpills">
+        <span class="today-pill" id="e-today" style="display:none">今日</span>
+        <button class="dpick" onclick="openDM('ex')">📅 選日期</button>
+      </div>
+    </div>
+    <button class="darr" id="en" onclick="shiftDate('ex',1)">›</button>
+  </div>
+  <div class="card">
+    <div class="ctitle"><div class="cdot"></div>新增運動</div>
+    <div class="ex-types">
+      <button class="ec" onclick="selEx(this,'🚶 散步')">🚶 散步</button>
+      <button class="ec" onclick="selEx(this,'🏃 跑步')">🏃 跑步</button>
+      <button class="ec" onclick="selEx(this,'🚴 騎車')">🚴 騎車</button>
+      <button class="ec" onclick="selEx(this,'🏊 游泳')">🏊 游泳</button>
+      <button class="ec" onclick="selEx(this,'🏋️ 重訓')">🏋️ 重訓</button>
+      <button class="ec" onclick="selEx(this,'🧘 瑜伽')">🧘 瑜伽</button>
+      <button class="ec" onclick="selEx(this,'🤸 伸展')">🤸 伸展</button>
+      <button class="ec" onclick="selEx(this,'🏸 羽球')">🏸 羽球</button>
+      <button class="ec" onclick="selEx(this,'🥊 有氧')">🥊 有氧</button>
+      <button class="ec" onclick="selEx(this,'🧗 爬山')">🧗 爬山</button>
+    </div>
+    <div class="egrid">
+      <div><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">運動名稱</div><input class="inp sm" id="en-name" placeholder="例：跑步"></div>
+      <div><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">時間（分）</div><input class="inp sm" type="number" id="en-min" placeholder="30" min="0"></div>
+      <div><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">消耗(kcal)</div><input class="inp sm" type="number" id="en-cal" placeholder="自動估算" min="0"></div>
+      <button class="btn sm" onclick="addEx()" style="align-self:flex-end;height:36px">新增</button>
+    </div>
+    <div style="font-size:11px;color:var(--t3)">💡 熱量留空會依運動類型自動估算</div>
+  </div>
+  <div class="sec">當日運動</div>
+  <div id="ex-list"></div>
+  <div class="empty" id="ex-empty"><div class="ei">🏃</div>今天還沒有運動紀錄</div>
+  <div class="card" id="ex-sum" style="display:none">
+    <div class="ctitle"><div class="cdot"></div>當日總結</div>
+    <div style="display:flex;gap:22px;flex-wrap:wrap">
+      <div><div style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:3px">運動時間</div><div style="font-family:var(--mo);font-size:19px;font-weight:700;color:var(--pro)" id="et-min">—</div></div>
+      <div><div style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:3px">消耗熱量</div><div style="font-family:var(--mo);font-size:19px;font-weight:700;color:var(--ok)" id="et-cal">—</div></div>
+      <div><div style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:3px">淨攝取</div><div style="font-family:var(--mo);font-size:19px;font-weight:700;color:var(--ac)" id="et-net">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HEALTH ===== -->
+<div class="pg" id="pg-health">
+  <div class="dnav">
+    <button class="darr" id="hp" onclick="shiftDate('health',-1)">‹</button>
+    <div class="dinfo">
+      <span class="dlbl" id="h-lbl"></span>
+      <div class="dpills">
+        <span class="today-pill" id="h-today" style="display:none">今日</span>
+        <button class="dpick" onclick="openDM('health')">📅 選日期</button>
+      </div>
+    </div>
+    <button class="darr" id="hn" onclick="shiftDate('health',1)">›</button>
+  </div>
+  <div class="card">
+    <div class="ctitle"><div class="cdot"></div>身體感受</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:9px">點選所有符合的狀況：</div>
+    <div class="schips" id="schips">
+      <button class="sc" data-t="good" onclick="togS(this)">✅ 精神良好</button>
+      <button class="sc" data-t="good" onclick="togS(this)">💪 體力充沛</button>
+      <button class="sc" data-t="good" onclick="togS(this)">😴 睡眠良好</button>
+      <button class="sc" data-t="good" onclick="togS(this)">😊 心情好</button>
+      <button class="sc" data-t="mild" onclick="togS(this)">😐 輕微疲勞</button>
+      <button class="sc" data-t="mild" onclick="togS(this)">💧 輕微水腫</button>
+      <button class="sc" data-t="mild" onclick="togS(this)">🫀 心跳稍快</button>
+      <button class="sc" data-t="mild" onclick="togS(this)">😮‍💨 輕微喘</button>
+      <button class="sc" data-t="mild" onclick="togS(this)">🤢 輕微噁心</button>
+      <button class="sc" data-t="mild" onclick="togS(this)">💊 需服藥</button>
+      <button class="sc" data-t="bad" onclick="togS(this)">😵 頭暈頭痛</button>
+      <button class="sc" data-t="bad" onclick="togS(this)">💔 胸悶胸痛</button>
+      <button class="sc" data-t="bad" onclick="togS(this)">🤮 嚴重噁心</button>
+      <button class="sc" data-t="bad" onclick="togS(this)">🦵 肌肉痠痛</button>
+      <button class="sc" data-t="bad" onclick="togS(this)">🛌 非常疲倦</button>
+      <button class="sc" data-t="bad" onclick="togS(this)">🥶 盜汗/發冷</button>
+      <button class="sc" data-t="bad" onclick="togS(this)">😱 情緒不穩</button>
+      <button class="sc" data-t="bad" onclick="togS(this)">💉 注射部位不適</button>
+    </div>
+    <div class="mr"><div class="ml">詳細備註</div><textarea class="inp" id="hn-notes" rows="3" placeholder="例：注射後第3天，下午頭有點暈..."></textarea></div>
+    <div style="display:flex;gap:7px;margin-top:11px">
+      <button class="btn sm" onclick="saveHealth()">儲存</button>
+      <button class="btn sm o" onclick="clearHealth()">清除</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle"><div class="cdot"></div>最近健康紀錄</div>
+    <div id="h-hist"></div>
+  </div>
+</div>
+
+<!-- ===== INJECT ===== -->
+<div class="pg" id="pg-inject">
+  <div class="sec">猛健樂注射紀錄</div>
+  <div class="card" style="border-color:var(--ac)">
+    <div class="ctitle"><div class="cdot"></div>注射資訊</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:15px">
+      <div><div style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:3px">藥物劑量</div><div style="font-family:var(--mo);font-size:22px;color:var(--ac);font-weight:700">5 mg</div></div>
+      <div><div style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:3px">注射週期</div><div style="font-family:var(--mo);font-size:22px;font-weight:700">7 天</div></div>
+      <div><div style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:3px">注射次數</div><div style="font-family:var(--mo);font-size:22px;font-weight:700" id="inj-cnt">0 次</div></div>
+    </div>
+    <div style="padding:13px;background:var(--sur2);border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:13px">
+      <div style="font-size:12px;color:var(--t3);margin-bottom:3px">下次預計注射日</div>
+      <div style="font-family:var(--mo);font-size:17px;color:var(--ac);font-weight:700" id="inj-next">—</div>
+      <div style="font-size:12px;color:var(--t2);margin-top:3px" id="inj-cd"></div>
+    </div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      <button class="btn sm" onclick="logToday()">✅ 今天注射了</button>
+      <button class="btn sm o" onclick="document.getElementById('inj-modal').classList.add('on')">📅 選日期補登</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle"><div class="cdot"></div>注射歷史</div>
+    <div id="inj-hist"></div>
+  </div>
+</div>
+
+
+<!-- ===== MEASURE ===== -->
+<div class="pg" id="pg-measure">
+  <div class="sec">身體圍度追蹤</div>
+
+  <div class="m-remind" id="m-remind">
+    <span style="font-size:16px">📅</span>
+    <div>
+      <div style="font-weight:500;color:var(--t)" id="m-remind-txt">建議每週五量測</div>
+      <div style="font-size:11px;color:var(--t3);font-family:var(--mo)" id="m-remind-sub"></div>
+    </div>
+  </div>
+
+  <!-- Latest stats -->
+  <div class="sec">最新數據</div>
+  <div class="m-grid">
+    <div class="m-box"><div class="m-box-lbl">腰圍</div><div class="m-box-val" id="mv-waist">—<span class="m-box-unit"> cm</span></div><div class="m-box-diff" id="md-waist"></div></div>
+    <div class="m-box"><div class="m-box-lbl">臀圍</div><div class="m-box-val" id="mv-hip">—<span class="m-box-unit"> cm</span></div><div class="m-box-diff" id="md-hip"></div></div>
+    <div class="m-box"><div class="m-box-lbl">大腿圍</div><div class="m-box-val" id="mv-thigh">—<span class="m-box-unit"> cm</span></div><div class="m-box-diff" id="md-thigh"></div></div>
+    <div class="m-box"><div class="m-box-lbl">手臂圍</div><div class="m-box-val" id="mv-arm">—<span class="m-box-unit"> cm</span></div><div class="m-box-diff" id="md-arm"></div></div>
+  </div>
+
+  <!-- Add measurement -->
+  <div class="card">
+    <div class="ctitle"><div class="cdot"></div>新增量測</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <div><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">量測日期</div>
+        <input class="inp" type="date" id="meas-date"></div>
+      <div style="display:flex;align-items:flex-end">
+        <div style="font-size:11px;color:var(--t3);font-family:var(--mo);line-height:1.6">建議每週五量測<br>早上起床後、空腹</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">腰圍 (cm)</div><input class="inp sm" type="number" id="meas-waist" placeholder="例：80" step="0.1" min="0"></div>
+      <div><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">臀圍 (cm)</div><input class="inp sm" type="number" id="meas-hip" placeholder="例：95" step="0.1" min="0"></div>
+      <div><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">大腿圍 (cm)</div><input class="inp sm" type="number" id="meas-thigh" placeholder="例：55" step="0.1" min="0"></div>
+      <div><div class="ml" style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:4px">手臂圍 (cm)</div><input class="inp sm" type="number" id="meas-arm" placeholder="例：30" step="0.1" min="0"></div>
+    </div>
+    <button class="btn sm" onclick="addMeasure()">儲存量測</button>
+  </div>
+
+  <!-- History table -->
+  <div class="card">
+    <div class="ctitle"><div class="cdot"></div>量測歷史</div>
+    <div style="overflow-x:auto">
+      <table class="m-tbl">
+        <thead><tr>
+          <th>日期</th><th>腰圍</th><th>臀圍</th><th>大腿</th><th>手臂</th><th></th>
+        </tr></thead>
+        <tbody id="meas-tbody"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="meas-empty" style="display:none"><div class="ei">📏</div>還沒有量測紀錄</div>
+  </div>
+</div>
+
+<!-- ===== HISTORY ===== -->
+<div class="pg" id="pg-history">
+  <div class="sec">完整歷史紀錄</div>
+  <div id="hist-list"><div class="empty"><div class="ei">📅</div>還沒有任何紀錄</div></div>
+</div>
+
+</main>
+</div>
+
+<!-- Date picker modal -->
+<div class="dmod-bg" id="dm">
+  <div class="dmod">
+    <div class="dmod-title" id="dm-title">📅 選擇日期</div>
+    <input type="date" class="dmod-inp" id="dm-inp" min="2025-05-09">
+    <div class="quick-dates" id="dm-quick"></div>
+    <div class="dmod-actions">
+      <button class="btn" onclick="confirmDM()">確定</button>
+      <button class="btn o" onclick="closeDM()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- Inject modal -->
+<div class="mbg" id="inj-modal">
+  <div class="modal">
+    <div class="mtit">💉 補登注射紀錄</div>
+    <div class="mr"><div class="ml">注射日期</div><input class="inp" type="date" id="im-date" min="2025-05-09"></div>
+    <div class="mr"><div class="ml">注射部位（選填）</div><input class="inp" id="im-site" placeholder="例：左腹、右大腿"></div>
+    <div class="mr"><div class="ml">備註（選填）</div><input class="inp" id="im-note" placeholder="例：輕微紅腫"></div>
+    <div class="mact">
+      <button class="btn sm" onclick="saveInj()">儲存</button>
+      <button class="btn sm o" onclick="document.getElementById('inj-modal').classList.remove('on')">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ── CONSTANTS ──
+const MIN = '2025-05-09';
+const GOALS = {kcal:1450, prot:120, carb:80, sugar:25, fat:50, goalW:70};
+const EX_MET = {'散步':4,'跑步':9,'騎車':7,'游泳':8,'重訓':6,'瑜伽':3,'伸展':2,'羽球':7,'有氧':7,'爬山':8};
+const EX_ICO = {'散步':'🚶','跑步':'🏃','騎車':'🚴','游泳':'🏊','重訓':'🏋️','瑜伽':'🧘','伸展':'🤸','羽球':'🏸','有氧':'🥊','爬山':'🧗'};
+
+// ── DATE UTILS ──
+function today(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+const TODAY = today();
+
+function fmtDate(d){
+  const dt=new Date(d+'T00:00:00');
+  return dt.toLocaleDateString('zh-TW',{month:'long',day:'numeric',weekday:'short'});
+}
+function addDays(d,n){
+  const dt=new Date(d+'T00:00:00');
+  dt.setDate(dt.getDate()+n);
+  return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+}
+function dayDiff(a,b){
+  return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000);
+}
+
+// ── STORAGE ──
+function load(){
+  try{
+    // Migrate old keys
+    for(const k of ['mjl_data','mjl_v2','mjl_v3']){
+      const old=localStorage.getItem(k);
+      if(old && !localStorage.getItem('mjl')){
+        localStorage.setItem('mjl', old);
+        localStorage.removeItem(k);
+      }
+    }
+    return JSON.parse(localStorage.getItem('mjl')||'{}');
+  }catch{return {};}
+}
+function save(d){localStorage.setItem('mjl',JSON.stringify(d));}
+function day(data,k){
+  if(!data[k])data[k]={};
+  if(!data[k].meals)data[k].meals={breakfast:[],lunch:[],dinner:[],snack:[]};
+  if(!data[k].exercises)data[k].exercises=[];
+  return data;
+}
+
+// ── STATE ──
+let curMeal='breakfast', wChart=null;
+let dates={meal:TODAY, ex:TODAY, health:TODAY};
+let pendingImg=null;
+
+// ── INIT ──
+document.getElementById('hdr-date').textContent=new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
+document.getElementById('wd').value=TODAY;
+document.getElementById('wd').min=MIN;
+document.getElementById('wd').max=TODAY;
+document.getElementById('im-date').value=TODAY;
+document.querySelectorAll('.sc').forEach(c=>c.dataset.on='0');
+renderDateNav('meal'); renderDateNav('ex'); renderDateNav('health');
+renderFoods(); updateTotals(); renderExList(); renderInjBanner(); renderInjPage(); renderWeightPage(); renderHHist();
+
+// ── NAV ──
+function goPage(name,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
+  btn.classList.add('on');
+  if(name==='weight')renderWeightPage();
+  if(name==='history')renderHistory();
+  if(name==='measure'){renderMeasurePage();}
+  if(name==='inject'){renderInjPage();renderInjBanner();}
+  if(name==='health'){renderDateNav('health');loadHealth();renderHHist();}
+  if(name==='exercise'){renderDateNav('ex');renderExList();}
+}
+
+// ── DATE NAV ──
+function renderDateNav(ctx){
+  const d=dates[ctx];
+  const lblMap={meal:'m-lbl',ex:'e-lbl',health:'h-lbl'};
+  const pillMap={meal:'m-today',ex:'e-today',health:'h-today'};
+  const prevMap={meal:'mp',ex:'ep',health:'hp'};
+  const nextMap={meal:'meal-next',ex:'en',health:'hn'};
+  document.getElementById(lblMap[ctx]).textContent=fmtDate(d);
+  document.getElementById(pillMap[ctx]).style.display=d===TODAY?'':'none';
+  document.getElementById(prevMap[ctx]).disabled=d<=MIN;
+  document.getElementById(nextMap[ctx]).disabled=d>=TODAY;
+}
+
+function shiftDate(ctx,n){
+  const v=addDays(dates[ctx],n);
+  if(v<MIN||v>TODAY)return;
+  dates[ctx]=v;
+  renderDateNav(ctx);
+  if(ctx==='meal'){renderFoods();updateTotals();}
+  if(ctx==='ex')renderExList();
+  if(ctx==='health'){loadHealth();}
+}
+
+// ── DATE MODAL ──
+let _dmCtx='meal';
+function openDM(ctx){
+  _dmCtx=ctx;
+  const inp=document.getElementById('dm-inp');
+  inp.max=TODAY; inp.value=dates[ctx];
+  // Quick buttons: last 14 days
+  const qc=document.getElementById('dm-quick');
+  qc.innerHTML='';
+  for(let i=0;i<=13;i++){
+    const v=addDays(TODAY,-i);
+    if(v<MIN)break;
+    const dt=new Date(v+'T00:00:00');
+    const lbl=i===0?'今天':i===1?'昨天':
+      (dt.getMonth()+1)+'/'+(dt.getDate())+' ('+['日','一','二','三','四','五','六'][dt.getDay()]+')';
+    const b=document.createElement('button');
+    b.className='qd-btn'+(v===dates[ctx]?' sel':'');
+    b.textContent=lbl;
+    b.onclick=()=>{
+      inp.value=v;
+      qc.querySelectorAll('.qd-btn').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+    };
+    qc.appendChild(b);
+  }
+  document.getElementById('dm').classList.add('on');
+}
+function closeDM(){document.getElementById('dm').classList.remove('on');}
+function confirmDM(){
+  const v=document.getElementById('dm-inp').value;
+  if(!v||v<MIN||v>TODAY){toast('請選擇有效日期（2025/5/9 之後）');return;}
+  dates[_dmCtx]=v;
+  renderDateNav(_dmCtx);
+  if(_dmCtx==='meal'){renderFoods();updateTotals();pendingImg=null;document.getElementById('img-wrap').classList.remove('on');}
+  if(_dmCtx==='ex')renderExList();
+  if(_dmCtx==='health')loadHealth();
+  closeDM();
+}
+document.getElementById('dm').addEventListener('click',e=>{if(e.target===document.getElementById('dm'))closeDM();});
+document.getElementById('inj-modal').addEventListener('click',e=>{if(e.target===document.getElementById('inj-modal'))document.getElementById('inj-modal').classList.remove('on');});
+
+// ── PHOTO ──
+function handlePhoto(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    pendingImg=ev.target.result;
+    document.getElementById('img-prev').src=pendingImg;
+    document.getElementById('img-wrap').classList.add('on');
+    toast('📷 照片已載入，請手動填寫營養數值');
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+function clearPhoto(){
+  pendingImg=null;
+  document.getElementById('img-wrap').classList.remove('on');
+  document.getElementById('img-prev').src='';
+}
+
+// ── FOOD ──
+function switchMeal(m,btn){
+  curMeal=m;
+  document.querySelectorAll('.mt').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderFoods();
+}
+
+function renderFoods(){
+  const data=load();
+  const foods=(data[dates.meal]?.meals?.[curMeal])||[];
+  const list=document.getElementById('food-list');
+  const empty=document.getElementById('meal-empty');
+  list.innerHTML='';
+  if(!foods.length){empty.style.display='';updateTotals();return;}
+  empty.style.display='none';
+  foods.forEach((f,i)=>{
+    const div=document.createElement('div');div.className='fi';
+    const thumb=f.img
+      ?`<div class="fth"><img src="${f.img}" alt=""></div>`
+      :`<div class="fth">${f.thumb||'🍽️'}</div>`;
+    div.innerHTML=`${thumb}
+      <div style="flex:1;min-width:0">
+        <div class="fnm">${f.name}</div>
+        <div class="fmc">
+          <span class="mc0">🔥${f.kcal}kcal</span>
+          <span class="mc1">蛋白${f.protein}g</span>
+          <span class="mc2">碳${f.carb}g${f.sugar?` 糖${f.sugar}g`:''}</span>
+          <span class="mc3">脂${f.fat}g</span>
+        </div>
+      </div>
+      <button class="fdel" onclick="delFood(${i})">✕</button>`;
+    list.appendChild(div);
+  });
+  updateTotals();
+}
+
+function delFood(i){
+  const data=load(); day(data,dates.meal);
+  data[dates.meal].meals[curMeal].splice(i,1);
+  save(data); renderFoods();
+}
+
+function addFood(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){toast('請輸入食物名稱');return;}
+  const kcal=Math.round(parseFloat(document.getElementById('mk').value)||0);
+  const prot=Math.round((parseFloat(document.getElementById('mpr').value)||0)*10)/10;
+  const carb=Math.round((parseFloat(document.getElementById('mca').value)||0)*10)/10;
+  const sugar=Math.round((parseFloat(document.getElementById('msu').value)||0)*10)/10;
+  const fat= Math.round((parseFloat(document.getElementById('mfa').value)||0)*10)/10;
+  const data=load(); day(data,dates.meal);
+  data[dates.meal].meals[curMeal].push({name, thumb:'✏️', img:pendingImg||null, kcal, protein:prot, carb, sugar, fat});
+  save(data);
+  ['f-name','mk','mpr','mca','msu','mfa'].forEach(id=>document.getElementById(id).value='');
+  // Clear photo after attaching to first item
+  if(pendingImg){ clearPhoto(); }
+  renderFoods();
+  toast('✅ 已新增 '+name);
+}
+
+function updateTotals(){
+  const data=load(); let p=0,c=0,su=0,f=0,k=0;
+  Object.values(data[dates.meal]?.meals||{}).forEach(foods=>foods.forEach(fd=>{
+    p+=fd.protein||0; c+=fd.carb||0; su+=fd.sugar||0; f+=fd.fat||0; k+=fd.kcal||0;
+  }));
+  // Get today's exercise calories burned
+  const exCal=(data[dates.meal]?.exercises||[]).reduce((a,e)=>a+(e.kcal||0),0);
+  const net=Math.round(k-exCal);
+
+  // Calories
+  document.getElementById('tc').innerHTML=`${Math.round(k)}<span class="sunit">kcal</span>`;
+  const rem=GOALS.kcal-k;
+  document.getElementById('trem').textContent=rem>=0?`還差${Math.round(rem)}`:(`超標${Math.round(-rem)}`);
+
+  // Protein
+  document.getElementById('tp').innerHTML=`${Math.round(p)}<span class="sunit">g</span>`;
+  const protOk=p>=GOALS.prot;
+  document.getElementById('tp-s').textContent=protOk?'✅ 達標':`還差${Math.round(GOALS.prot-p)}g`;
+  document.getElementById('tp-s').style.color=protOk?'var(--ok)':'var(--err)';
+
+  // Carb
+  document.getElementById('tca').innerHTML=`${Math.round(c)}<span class="sunit">g</span>`;
+  const carbOver=c>GOALS.carb;
+  document.getElementById('tca-s').textContent=carbOver?`超標${Math.round(c-GOALS.carb)}g`:`還剩${Math.round(GOALS.carb-c)}g`;
+  document.getElementById('tca-s').style.color=carbOver?'var(--err)':'var(--t3)';
+  document.getElementById('tca').style.color=carbOver?'var(--err)':'var(--car)';
+
+  // Sugar
+  document.getElementById('tsu').innerHTML=`${Math.round(su)}<span class="sunit">g</span>`;
+  const sugarOver=su>GOALS.sugar;
+  document.getElementById('tsu-s').textContent=sugarOver?`超標${Math.round(su-GOALS.sugar)}g`:`還剩${Math.round(GOALS.sugar-su)}g`;
+  document.getElementById('tsu-s').style.color=sugarOver?'var(--err)':'var(--t3)';
+  document.getElementById('tsu').style.color=sugarOver?'var(--err)':'#f0c060';
+
+  // Fat
+  document.getElementById('tf').innerHTML=`${Math.round(f)}<span class="sunit">g</span>`;
+  const fatOver=f>GOALS.fat;
+  document.getElementById('tf-s').textContent=fatOver?`超標${Math.round(f-GOALS.fat)}g`:`還剩${Math.round(GOALS.fat-f)}g`;
+  document.getElementById('tf-s').style.color=fatOver?'var(--err)':'var(--t3)';
+  document.getElementById('tf').style.color=fatOver?'var(--err)':'var(--fat)';
+
+  // Net
+  document.getElementById('tnet').innerHTML=`${net}<span class="sunit">kcal</span>`;
+  document.getElementById('tnet-s').textContent=exCal?`運動消耗 ${exCal}kcal`:'';
+
+  // Progress bars
+  const cp=Math.min(Math.round(k/GOALS.kcal*100),100);
+  const pp=Math.min(Math.round(p/GOALS.prot*100),100);
+  const cabp=Math.min(Math.round(c/GOALS.carb*100),100);
+  const sup=Math.min(Math.round(su/GOALS.sugar*100),100);
+  const fatp=Math.min(Math.round(f/GOALS.fat*100),100);
+  document.getElementById('cpct').textContent=cp+'%';
+  document.getElementById('ppct').textContent=pp+'%';
+  document.getElementById('cabpct').textContent=cabp+'%';
+  document.getElementById('supct').textContent=sup+'%';
+  document.getElementById('fatpct').textContent=fatp+'%';
+  document.getElementById('bca').style.width=cp+'%';
+  document.getElementById('bpr').style.width=pp+'%';
+  document.getElementById('bcab').style.width=cabp+'%';
+  document.getElementById('bcab').style.background=carbOver?'var(--err)':'var(--car)';
+  document.getElementById('bsu').style.width=sup+'%';
+  document.getElementById('bsu').style.background=sugarOver?'var(--err)':'#f0c060';
+  document.getElementById('bfat').style.width=fatp+'%';
+  document.getElementById('bfat').style.background=fatOver?'var(--err)':'var(--fat)';
+
+  // Donut + legend
+  document.getElementById('rk').textContent=Math.round(k);
+  document.getElementById('lp').textContent=Math.round(p)+'g';
+  document.getElementById('lc').textContent=Math.round(c)+'g';
+  document.getElementById('lf').textContent=Math.round(f)+'g';
+  const tot=p*4+c*4+f*9;
+  document.getElementById('lpp').textContent=tot?Math.round(p*4/tot*100)+'%':'0%';
+  document.getElementById('lcp').textContent=tot?Math.round(c*4/tot*100)+'%':'0%';
+  document.getElementById('lfp').textContent=tot?Math.round(f*9/tot*100)+'%':'0%';
+  drawDonut(p,c,f);
+}
+
+function drawDonut(p,c,f){
+  const cv=document.getElementById('donut'),ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,74,74);
+  const tot=p*4+c*4+f*9, cx=37,cy=37,r=29;
+  ctx.lineWidth=9; ctx.lineCap='butt';
+  if(!tot){ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='#252525';ctx.stroke();return;}
+  let st=-Math.PI/2;
+  [{v:p*4,col:'#60b4f0'},{v:c*4,col:'#f0a060'},{v:f*9,col:'#f06090'}].forEach(s=>{
+    const a=s.v/tot*Math.PI*2; if(a<.01)return;
+    ctx.beginPath();ctx.arc(cx,cy,r,st,st+a);ctx.strokeStyle=s.col;ctx.stroke();st+=a;
+  });
+}
+
+// ── EXERCISE ──
+let selExName='';
+function selEx(btn,name){
+  document.querySelectorAll('.ec').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on'); selExName=name;
+  document.getElementById('en-name').value=name;
+}
+
+function addEx(){
+  const name=document.getElementById('en-name').value.trim()||selExName;
+  if(!name){toast('請輸入運動名稱');return;}
+  const min=parseInt(document.getElementById('en-min').value)||0;
+  let kcal=parseInt(document.getElementById('en-cal').value)||0;
+  if(!kcal&&min){
+    const key=Object.keys(EX_MET).find(k=>name.includes(k));
+    kcal=Math.round(min*(key?EX_MET[key]:5));
+  }
+  const key=Object.keys(EX_ICO).find(k=>name.includes(k));
+  const data=load(); day(data,dates.ex);
+  data[dates.ex].exercises.push({name, icon:key?EX_ICO[key]:'🏃', min, kcal});
+  save(data);
+  ['en-name','en-min','en-cal'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('.ec').forEach(c=>c.classList.remove('on')); selExName='';
+  renderExList(); toast('✅ 新增運動：'+name);
+}
+
+function delEx(i){
+  const data=load(); day(data,dates.ex);
+  data[dates.ex].exercises.splice(i,1);
+  save(data); renderExList();
+}
+
+function renderExList(){
+  const data=load(); const exs=(data[dates.ex]?.exercises)||[];
+  const list=document.getElementById('ex-list');
+  const empty=document.getElementById('ex-empty');
+  const sum=document.getElementById('ex-sum');
+  list.innerHTML='';
+  if(!exs.length){empty.style.display='';sum.style.display='none';return;}
+  empty.style.display='none'; sum.style.display='';
+  let totMin=0, totCal=0;
+  exs.forEach((ex,i)=>{
+    totMin+=ex.min||0; totCal+=ex.kcal||0;
+    const div=document.createElement('div'); div.className='eitem';
+    div.innerHTML=`<div class="eico">${ex.icon}</div>
+      <div class="einf"><div class="enm">${ex.name}</div><div class="emt">${ex.min?ex.min+' 分鐘':''}</div></div>
+      <div class="ecal">−${ex.kcal} kcal</div>
+      <button class="fdel" onclick="delEx(${i})">✕</button>`;
+    list.appendChild(div);
+  });
+  document.getElementById('et-min').textContent=totMin+' 分';
+  document.getElementById('et-cal').textContent=totCal+' kcal';
+  const mdata=load(); let foodCal=0;
+  Object.values(mdata[dates.ex]?.meals||{}).forEach(foods=>foods.forEach(f=>foodCal+=f.kcal||0));
+  document.getElementById('et-net').textContent=Math.round(foodCal-totCal)+' kcal';
+}
+
+// ── WEIGHT ──
+function addWeight(){
+  const val=parseFloat(document.getElementById('wv').value);
+  const date=document.getElementById('wd').value||TODAY;
+  const note=document.getElementById('wn').value.trim();
+  if(!val||val<20||val>300){toast('請輸入有效體重');return;}
+  const data=load();
+  if(!data.weights)data.weights=[];
+  const idx=data.weights.findIndex(w=>w.date===date);
+  if(idx>=0)data.weights[idx]={date,weight:val,note};
+  else data.weights.push({date,weight:val,note});
+  data.weights.sort((a,b)=>a.date.localeCompare(b.date));
+  save(data);
+  document.getElementById('wv').value=''; document.getElementById('wn').value='';
+  renderWeightPage(); toast('✅ 體重已儲存');
+}
+
+function delWeight(date){
+  const data=load(); data.weights=(data.weights||[]).filter(w=>w.date!==date);
+  save(data); renderWeightPage();
+}
+
+function renderWeightPage(){
+  const data=load(); const ws=data.weights||[];
+  const tbody=document.getElementById('wtbody');
+  const empty=document.getElementById('w-empty');
+  // Goal bar
+  const latest=ws.length?ws[ws.length-1]:null;
+  const first=ws.length?ws[0]:null;
+  if(latest){
+    document.getElementById('gw-cur').textContent=latest.weight+'kg';
+    const tl=first.weight-GOALS.goalW, ach=first.weight-latest.weight;
+    const pct=tl>0?Math.min(Math.round(ach/tl*100),100):0;
+    document.getElementById('gw-fill').style.width=pct+'%';
+    document.getElementById('gw-s').textContent=`起始 ${first.weight}kg`;
+    const rem=latest.weight-GOALS.goalW;
+    document.getElementById('gw-r').textContent=rem>0?`還差 ${rem.toFixed(1)}kg`:'🎉 已達標！';
+  }
+  tbody.innerHTML='';
+  if(!ws.length){empty.style.display='';renderWChart([]);return;}
+  empty.style.display='none';
+  const rev=[...ws].reverse();
+  rev.forEach((w,i)=>{
+    const prev=rev[i+1];
+    let dc='<td></td>';
+    if(prev){const d=w.weight-prev.weight;dc=`<td class="${d>0?'wu':'wd'}">${d>0?'▲':'▼'}${Math.abs(d).toFixed(1)}</td>`;}
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${w.date}</td><td class="wv">${w.weight}<span style="font-size:11px;color:var(--t3)">kg</span></td>${dc}<td style="font-size:12px">${w.note||'—'}</td><td><button class="fdel" onclick="delWeight('${w.date}')">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+  renderWChart(ws.slice(-30));
+}
+
+function renderWChart(ws){
+  const cv=document.getElementById('wchart');
+  if(wChart){wChart.destroy();wChart=null;}
+  if(ws.length<2)return;
+  wChart=new Chart(cv,{
+    type:'line',
+    data:{labels:ws.map(w=>w.date.slice(5)),datasets:[
+      {data:ws.map(w=>w.weight),borderColor:'#c8f060',backgroundColor:'rgba(200,240,96,.08)',borderWidth:2,pointBackgroundColor:'#c8f060',pointRadius:4,fill:true,tension:.4},
+      {data:ws.map(()=>GOALS.goalW),borderColor:'rgba(96,208,144,.4)',borderWidth:1.5,borderDash:[4,4],pointRadius:0,fill:false}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+      x:{ticks:{color:'#555',font:{family:'Space Mono',size:10}},grid:{color:'#1a1a1a'}},
+      y:{ticks:{color:'#555',font:{family:'Space Mono',size:10}},grid:{color:'#1a1a1a'}}
+    }}
+  });
+}
+
+// ── HEALTH ──
+function togS(btn){
+  btn.classList.remove('bad','mild','good');
+  btn.dataset.on=btn.dataset.on==='1'?'0':'1';
+  if(btn.dataset.on==='1')btn.classList.add(btn.dataset.t==='bad'?'bad':btn.dataset.t==='mild'?'mild':'good');
+}
+
+function loadHealth(){
+  document.querySelectorAll('.sc').forEach(c=>{c.classList.remove('bad','mild','good');c.dataset.on='0';});
+  document.getElementById('hn-notes').value='';
+  const data=load(); const h=data[dates.health]?.health;
+  if(!h)return;
+  if(h.notes)document.getElementById('hn-notes').value=h.notes;
+  (h.symptoms||[]).forEach(s=>{
+    document.querySelectorAll('.sc').forEach(c=>{
+      if(c.textContent.trim()===s.text){c.dataset.on='1';c.classList.add(s.type==='bad'?'bad':s.type==='mild'?'mild':'good');}
+    });
+  });
+}
+
+function saveHealth(){
+  const syms=[]; document.querySelectorAll('.sc').forEach(c=>{if(c.dataset.on==='1')syms.push({text:c.textContent.trim(),type:c.dataset.t});});
+  const notes=document.getElementById('hn-notes').value.trim();
+  const data=load(); day(data,dates.health);
+  data[dates.health].health={symptoms:syms,notes,savedAt:new Date().toISOString()};
+  save(data); renderHHist(); toast(`✅ ${dates.health} 健康狀況已儲存`);
+}
+
+function clearHealth(){
+  document.querySelectorAll('.sc').forEach(c=>{c.classList.remove('bad','mild','good');c.dataset.on='0';});
+  document.getElementById('hn-notes').value='';
+}
+
+function renderHHist(){
+  const data=load(); const cont=document.getElementById('h-hist');
+  const keys=Object.keys(data).filter(k=>k.match(/^\d{4}-\d{2}-\d{2}/)&&data[k]?.health?.savedAt).sort().reverse().slice(0,7);
+  if(!keys.length){cont.innerHTML='<div class="empty"><div class="ei">📋</div>還沒有健康紀錄</div>';return;}
+  cont.innerHTML=keys.map(k=>{
+    const h=data[k].health;
+    const tags=(h.symptoms||[]).map(s=>{
+      const cls=s.type==='good'?'bo':s.type==='bad'?'bs':'';
+      const sty=s.type==='mild'?'style="background:rgba(240,192,96,.12);color:var(--war)"':'';
+      return `<span class="badge ${cls}" ${sty}>${s.text}</span>`;
+    }).join('');
+    return `<div style="padding:9px 0;border-bottom:1px solid var(--bd)">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+        <span style="font-size:12px;color:var(--t3);font-family:var(--mo)">${k}</span>
+        ${k===TODAY?'<span class="today-pill">今日</span>':''}
+        <button style="font-size:11px;color:var(--t3);cursor:pointer;background:none;border:none;text-decoration:underline" onclick="jumpH('${k}')">編輯</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:5px">${tags||'<span style="color:var(--t3);font-size:11px">無勾選</span>'}</div>
+      ${h.notes?`<div style="font-size:12px;color:var(--t2);background:var(--sur2);padding:6px 10px;border-radius:6px;border:1px solid var(--bd)">${h.notes}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function jumpH(d){dates.health=d;renderDateNav('health');loadHealth();}
+
+// ── INJECTION ──
+function getInjs(){return((load().injections)||[]).sort((a,b)=>a.date.localeCompare(b.date));}
+function nextInj(){const injs=getInjs();return injs.length?addDays(injs[injs.length-1].date,7):null;}
+
+function renderInjBanner(){
+  const banner=document.getElementById('inj-banner');
+  const injs=getInjs();
+  if(!injs.length){
+    banner.className='inj-banner';
+    document.getElementById('inj-title').textContent='尚未記錄注射 — 請補登第一針（5/9）';
+    document.getElementById('inj-sub').textContent='點「選日期補登」補登 5/9 的注射';
+    return;
+  }
+  const next=nextInj(), diff=dayDiff(TODAY,next);
+  if(diff<0){
+    banner.className='inj-banner over';
+    document.getElementById('inj-title').textContent=`⚠️ 注射已逾期 ${Math.abs(diff)} 天！`;
+  }else if(diff===0){
+    banner.className='inj-banner due';
+    document.getElementById('inj-title').textContent='💉 今天是注射日！';
+  }else if(diff<=2){
+    banner.className='inj-banner due';
+    document.getElementById('inj-title').textContent=`即將注射 — 還有 ${diff} 天`;
+  }else{
+    banner.className='inj-banner';
+    document.getElementById('inj-title').textContent=`下次注射還有 ${diff} 天`;
+  }
+  document.getElementById('inj-sub').textContent=`上次：${injs[injs.length-1].date} ｜ 預計：${next}`;
+}
+
+function renderInjPage(){
+  const injs=getInjs();
+  document.getElementById('inj-cnt').textContent=injs.length+' 次';
+  const next=nextInj();
+  document.getElementById('inj-next').textContent=next||'—';
+  if(next){
+    const diff=dayDiff(TODAY,next);
+    document.getElementById('inj-cd').textContent=diff===0?'今天就是注射日！':diff>0?`距今還有 ${diff} 天`:`已過期 ${Math.abs(diff)} 天`;
+  }
+  const cont=document.getElementById('inj-hist');
+  if(!injs.length){cont.innerHTML='<div class="empty"><div class="ei">💉</div>還沒有注射紀錄<br><small style="color:var(--t3)">請補登 5/9 第一針</small></div>';return;}
+  const rev=[...injs].reverse();
+  cont.innerHTML=rev.map((inj,i)=>{
+    const prev=rev[i+1];
+    const gap=prev?`間隔 ${dayDiff(prev.date,inj.date)} 天`:'';
+    return `<div class="ij">
+      <div class="ij-date">${inj.date}</div>
+      <div class="ij-info">${inj.site?'部位：'+inj.site:''}${inj.note?' ｜ '+inj.note:''}</div>
+      ${gap?`<span class="ij-badge">${gap}</span>`:''}
+      <button class="fdel" onclick="delInj('${inj.date}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function logToday(){
+  const data=load();
+  if(!data.injections)data.injections=[];
+  if(data.injections.find(i=>i.date===TODAY)){toast('今天已記錄過了');return;}
+  data.injections.push({date:TODAY,site:'',note:'',at:new Date().toISOString()});
+  save(data); renderInjBanner(); renderInjPage(); toast('✅ 已記錄今日注射');
+}
+
+function saveInj(){
+  const date=document.getElementById('im-date').value;
+  if(!date){toast('請選擇日期');return;}
+  const site=document.getElementById('im-site').value.trim();
+  const note=document.getElementById('im-note').value.trim();
+  const data=load();
+  if(!data.injections)data.injections=[];
+  const idx=data.injections.findIndex(i=>i.date===date);
+  const entry={date,site,note,at:new Date().toISOString()};
+  if(idx>=0)data.injections[idx]=entry; else data.injections.push(entry);
+  data.injections.sort((a,b)=>a.date.localeCompare(b.date));
+  save(data);
+  document.getElementById('inj-modal').classList.remove('on');
+  renderInjBanner(); renderInjPage(); toast(`✅ 已記錄 ${date} 注射`);
+}
+
+function delInj(date){
+  const data=load(); data.injections=(data.injections||[]).filter(i=>i.date!==date);
+  save(data); renderInjBanner(); renderInjPage();
+}
+
+// ── HISTORY ──
+function renderHistory(){
+  const data=load(); const cont=document.getElementById('hist-list');
+  const keys=Object.keys(data).filter(k=>k.match(/^\d{4}-\d{2}-\d{2}/)).sort().reverse();
+  if(!keys.length){cont.innerHTML='<div class="empty"><div class="ei">📅</div>還沒有任何紀錄</div>';return;}
+  const MEAL_NAME={breakfast:'🌅 早餐',lunch:'☀️ 午餐',dinner:'🌙 晚餐',snack:'🍎 點心'};
+  cont.innerHTML=keys.map(k=>{
+    const d=data[k]; let p=0,c=0,su=0,f=0,kcal=0;
+    Object.values(d.meals||{}).forEach(foods=>foods.forEach(fd=>{p+=fd.protein||0;c+=fd.carb||0;su+=fd.sugar||0;f+=fd.fat||0;kcal+=fd.kcal||0;}));
+    const exs=d.exercises||[]; const exCal=exs.reduce((a,e)=>a+(e.kcal||0),0);
+    const h=d.health;
+    const hasBad=h?.symptoms?.some(s=>s.type==='bad');
+    const hasMild=h?.symptoms?.some(s=>s.type==='mild');
+    const hasGood=h?.symptoms?.length&&!hasBad&&!hasMild;
+    const inj=(data.injections||[]).find(i=>i.date===k);
+    const wEnt=(data.weights||[]).find(w=>w.date===k);
+    const mEnt=(data.measures||[]).find(m=>m.date===k);
+
+    // Summary badges
+    const badges=`
+      ${wEnt?`<span class="badge bc">⚖️${wEnt.weight}kg</span>`:''}
+      ${kcal?`<span class="badge bc">🔥${Math.round(kcal)}kcal</span>`:''}
+      ${p?`<span class="badge bp">蛋白${Math.round(p)}g</span>`:''}
+      ${exs.length?`<span class="badge be">🏃${exCal}kcal</span>`:''}
+      ${inj?'<span class="badge bc">💉注射</span>':''}
+      ${mEnt?'<span class="badge" style="background:rgba(240,160,96,.12);color:var(--car)">📏圍度</span>':''}
+      ${hasBad?'<span class="badge bs">有不適</span>':hasMild?'<span class="badge bw">輕微不適</span>':hasGood?'<span class="badge bo">狀況良好</span>':''}
+    `;
+
+    // ── DETAIL SECTIONS ──
+
+    // 1. Nutrition summary
+    const nutri = kcal ? `
+      <div class="h-section">
+        <div class="h-sec-title">營養攝取</div>
+        <div class="h-stat-row">
+          <div class="h-stat"><div class="h-stat-v" style="color:var(--ac)">${Math.round(kcal)}</div><div class="h-stat-l">kcal</div></div>
+          <div class="h-stat"><div class="h-stat-v" style="color:var(--pro)">${Math.round(p)}g</div><div class="h-stat-l">蛋白質</div></div>
+          <div class="h-stat"><div class="h-stat-v" style="color:var(--car)">${Math.round(c)}g</div><div class="h-stat-l">碳水</div></div>
+          <div class="h-stat"><div class="h-stat-v" style="color:#f0c060">${Math.round(su)}g</div><div class="h-stat-l">糖</div></div>
+          <div class="h-stat"><div class="h-stat-v" style="color:var(--fat)">${Math.round(f)}g</div><div class="h-stat-l">脂肪</div></div>
+        </div>
+      </div>` : '';
+
+    // 2. Meals detail
+    const mealHtml = Object.entries(d.meals||{}).map(([meal,foods])=>{
+      if(!foods?.length) return '';
+      const rows = foods.map(fd=>{
+        const thumb = fd.img
+          ? `<div class="h-food-thumb"><img src="${fd.img}"></div>`
+          : `<div class="h-food-thumb">${fd.thumb||'🍽️'}</div>`;
+        return `<div class="h-food-row">
+          ${thumb}
+          <div class="h-food-name">${fd.name}</div>
+          <div class="h-food-mac">🔥${fd.kcal} · 蛋${fd.protein}g · 碳${fd.carb}g${fd.sugar?' · 糖'+fd.sugar+'g':''} · 脂${fd.fat}g</div>
+        </div>`;
+      }).join('');
+      return `<div class="h-meal-tab"><div class="h-meal-name">${MEAL_NAME[meal]}</div>${rows}</div>`;
+    }).join('');
+    const meals = mealHtml ? `<div class="h-section"><div class="h-sec-title">飲食明細</div>${mealHtml}</div>` : '';
+
+    // 3. Exercise
+    const exHtml = exs.length ? `
+      <div class="h-section">
+        <div class="h-sec-title">運動紀錄</div>
+        ${exs.map(ex=>`<div class="h-ex-row">
+          <span style="font-size:18px">${ex.icon}</span>
+          <span style="flex:1;font-size:13px">${ex.name}</span>
+          <span style="font-size:12px;color:var(--t2);font-family:var(--mo)">${ex.min?ex.min+'分 · ':''}</span>
+          <span style="font-size:12px;color:var(--ok);font-family:var(--mo)">−${ex.kcal}kcal</span>
+        </div>`).join('')}
+        <div style="font-size:12px;color:var(--t3);margin-top:6px;font-family:var(--mo)">淨攝取：${Math.round(kcal-exCal)} kcal</div>
+      </div>` : '';
+
+    // 4. Weight
+    const weightHtml = wEnt ? `
+      <div class="h-section">
+        <div class="h-sec-title">體重</div>
+        <div style="display:flex;align-items:baseline;gap:8px;padding:10px;background:var(--sur2);border-radius:var(--rs)">
+          <span style="font-family:var(--mo);font-size:22px;font-weight:700;color:var(--ac)">${wEnt.weight}</span>
+          <span style="color:var(--t2);font-size:13px">kg</span>
+          ${wEnt.note?`<span style="font-size:12px;color:var(--t3);margin-left:8px">${wEnt.note}</span>`:''}
+        </div>
+      </div>` : '';
+
+    // 5. Measures
+    const measHtml = mEnt ? `
+      <div class="h-section">
+        <div class="h-sec-title">身體圍度</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px">
+          ${mEnt.waist?`<div class="h-stat"><div class="h-stat-v" style="color:var(--car)">${mEnt.waist}</div><div class="h-stat-l">腰圍 cm</div></div>`:''}
+          ${mEnt.hip?`<div class="h-stat"><div class="h-stat-v" style="color:var(--car)">${mEnt.hip}</div><div class="h-stat-l">臀圍 cm</div></div>`:''}
+          ${mEnt.thigh?`<div class="h-stat"><div class="h-stat-v" style="color:var(--car)">${mEnt.thigh}</div><div class="h-stat-l">大腿圍 cm</div></div>`:''}
+          ${mEnt.arm?`<div class="h-stat"><div class="h-stat-v" style="color:var(--car)">${mEnt.arm}</div><div class="h-stat-l">手臂圍 cm</div></div>`:''}
+        </div>
+      </div>` : '';
+
+    // 6. Injection
+    const injHtml = inj ? `
+      <div class="h-section">
+        <div class="h-sec-title">注射</div>
+        <div style="padding:10px;background:var(--acd2);border:1px solid var(--ac);border-radius:var(--rs);font-size:13px">
+          💉 5mg 猛健樂${inj.site?' · 部位：'+inj.site:''}${inj.note?' · '+inj.note:''}
+        </div>
+      </div>` : '';
+
+    // 7. Health symptoms + notes
+    const sympHtml = h?.symptoms?.length ? `
+      <div class="h-symp-wrap">
+        ${h.symptoms.map(s=>{
+          const cls=s.type==='good'?'bo':s.type==='bad'?'bs':'';
+          const sty=s.type==='mild'?'style="background:rgba(240,192,96,.12);color:var(--war)"':'';
+          return `<span class="badge ${cls}" ${sty}>${s.text}</span>`;
+        }).join('')}
+      </div>` : '';
+    const healthHtml = (h?.symptoms?.length||h?.notes) ? `
+      <div class="h-section">
+        <div class="h-sec-title">健康狀況</div>
+        ${sympHtml}
+        ${h?.notes?`<div style="font-size:12px;color:var(--t2);background:var(--sur2);padding:8px 11px;border-radius:6px;border:1px solid var(--bd)">${h.notes}</div>`:''}
+      </div>` : '';
+
+    const hasAny = kcal||exs.length||wEnt||mEnt||inj||h?.symptoms?.length||h?.notes;
+
+    return `<div class="hday" id="hday-${k}">
+      <div class="hhd" onclick="toggleDay('${k}')">
+        <div>
+          <div class="hdt">${k}${k===TODAY?' <span style="color:var(--ac);font-size:10px">(今日)</span>':''}</div>
+          <div class="hbdg" style="margin-top:5px">${badges}</div>
+        </div>
+        <span class="h-chevron">▼</span>
+      </div>
+      <div class="h-detail">
+        ${hasAny
+          ? nutri + meals + exHtml + weightHtml + measHtml + injHtml + healthHtml
+          : '<div style="color:var(--t3);font-size:13px;padding:10px 0">這天還沒有任何紀錄</div>'
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleDay(k){
+  const el=document.getElementById('hday-'+k);
+  el.classList.toggle('open');
+}
+
+// ── TOAST ──
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),2500);
+}
+
+
+
+// ── MEASURE ──
+function getNextFriday(){
+  const d=new Date();
+  const day=d.getDay(); // 0=Sun,5=Fri
+  const diff=(5-day+7)%7||7;
+  d.setDate(d.getDate()+diff);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function initMeasurePage(){
+  const d=new Date();
+  document.getElementById('meas-date').value=TODAY;
+  document.getElementById('meas-date').max=TODAY;
+  // Reminder
+  const day=d.getDay();
+  const isFri=day===5;
+  const remind=document.getElementById('m-remind-txt');
+  const sub=document.getElementById('m-remind-sub');
+  if(isFri){
+    remind.textContent='📏 今天是週五，是量測日！';
+    remind.style.color='var(--ac)';
+    sub.textContent='記得早上起床後、空腹量測';
+  } else {
+    const nf=getNextFriday();
+    const diff=dayDiff(TODAY,nf);
+    remind.textContent=`下次量測日：週五（還有 ${diff} 天）`;
+    remind.style.color='var(--t)';
+    sub.textContent=nf+' · 建議早上空腹量測';
+  }
+}
+
+function addMeasure(){
+  const date=document.getElementById('meas-date').value||TODAY;
+  const waist=parseFloat(document.getElementById('meas-waist').value)||null;
+  const hip=parseFloat(document.getElementById('meas-hip').value)||null;
+  const thigh=parseFloat(document.getElementById('meas-thigh').value)||null;
+  const arm=parseFloat(document.getElementById('meas-arm').value)||null;
+  if(!waist&&!hip&&!thigh&&!arm){toast('請至少填入一個圍度');return;}
+  const data=load();
+  if(!data.measures)data.measures=[];
+  const idx=data.measures.findIndex(m=>m.date===date);
+  const entry={date,waist,hip,thigh,arm};
+  if(idx>=0)data.measures[idx]=entry; else data.measures.push(entry);
+  data.measures.sort((a,b)=>a.date.localeCompare(b.date));
+  save(data);
+  ['meas-waist','meas-hip','meas-thigh','meas-arm'].forEach(id=>document.getElementById(id).value='');
+  renderMeasurePage();
+  toast('✅ 圍度已儲存');
+}
+
+function delMeasure(date){
+  const data=load();
+  data.measures=(data.measures||[]).filter(m=>m.date!==date);
+  save(data); renderMeasurePage();
+}
+
+function renderMeasurePage(){
+  initMeasurePage();
+  const data=load();
+  const ms=(data.measures||[]);
+  const tbody=document.getElementById('meas-tbody');
+  const empty=document.getElementById('meas-empty');
+
+  // Latest stats boxes
+  const fields=['waist','hip','thigh','arm'];
+  const nameMap={waist:'腰圍',hip:'臀圍',thigh:'大腿圍',arm:'手臂圍'};
+  if(ms.length){
+    const latest=ms[ms.length-1];
+    const prev=ms.length>1?ms[ms.length-2]:null;
+    fields.forEach(f=>{
+      const v=latest[f];
+      const vEl=document.getElementById('mv-'+f);
+      const dEl=document.getElementById('md-'+f);
+      if(v){
+        vEl.innerHTML=`${v}<span class="m-box-unit"> cm</span>`;
+        if(prev&&prev[f]){
+          const diff=v-prev[f];
+          dEl.textContent=(diff>0?'▲':'▼')+Math.abs(diff).toFixed(1)+' cm';
+          dEl.style.color=diff<0?'var(--ok)':diff>0?'var(--err)':'var(--t3)';
+        } else dEl.textContent='';
+      } else { vEl.innerHTML='—<span class="m-box-unit"> cm</span>'; dEl.textContent=''; }
+    });
+  }
+
+  tbody.innerHTML='';
+  if(!ms.length){empty.style.display='';return;}
+  empty.style.display='none';
+  const rev=[...ms].reverse();
+  rev.forEach((m,i)=>{
+    const prev=rev[i+1];
+    function diffStr(cur,prv,field){
+      if(!cur||!prv||!prv[field])return '';
+      const d=cur-prv[field];
+      return `<span style="font-size:10px;color:${d<0?'var(--ok)':d>0?'var(--err)':'var(--t3)'}">${d>0?'▲':'▼'}${Math.abs(d).toFixed(1)}</span>`;
+    }
+    const tr=document.createElement('tr');
+    const isFri=new Date(m.date+'T00:00:00').getDay()===5;
+    tr.innerHTML=`
+      <td>${m.date}${isFri?'<span style="font-size:9px;color:var(--ac);margin-left:4px">五</span>':''}</td>
+      <td>${m.waist||'—'}${m.waist?diffStr(m.waist,prev,'waist'):''}</td>
+      <td>${m.hip||'—'}${m.hip?diffStr(m.hip,prev,'hip'):''}</td>
+      <td>${m.thigh||'—'}${m.thigh?diffStr(m.thigh,prev,'thigh'):''}</td>
+      <td>${m.arm||'—'}${m.arm?diffStr(m.arm,prev,'arm'):''}</td>
+      <td><button class="fdel" onclick="delMeasure('${m.date}')">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── EXPORT / IMPORT ──
+function exportData(){
+  const data=load();
+  const json=JSON.stringify(data, null, 2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  const dateStr=TODAY.replace(/-/g,'');
+  a.download=`猛健樂日記_${dateStr}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('✅ 資料已匯出！把這個 JSON 檔帶到 Chrome 裡匯入');
+}
+
+function importData(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      // Clean up the text - remove BOM and whitespace
+      let text = ev.target.result;
+      text = text.replace(/^﻿/, '').trim();
+
+      // Try to find JSON object if there's extra content
+      const start = text.indexOf('{');
+      const end = text.lastIndexOf('}');
+      if(start !== -1 && end !== -1){
+        text = text.slice(start, end+1);
+      }
+
+      const parsed = JSON.parse(text);
+
+      // Validate it looks like our data
+      const hasData = parsed.weights || parsed.injections || parsed.measures ||
+        Object.keys(parsed).some(k => k.match(/^\d{4}-\d{2}-\d{2}/));
+      if(!hasData){
+        toast('⚠️ 檔案格式不符，請確認是從這個 app 匯出的 JSON');
+        e.target.value=''; return;
+      }
+
+      // Merge with existing data
+      const existing = load();
+      const merged = Object.assign({}, existing, parsed);
+
+      // Merge weights (deduplicate by date)
+      if(existing.weights || parsed.weights){
+        const wMap={};
+        [...(existing.weights||[]),...(parsed.weights||[])].forEach(w=>wMap[w.date]=w);
+        merged.weights = Object.values(wMap).sort((a,b)=>a.date.localeCompare(b.date));
+      }
+      // Merge injections (deduplicate by date)
+      if(existing.injections || parsed.injections){
+        const iMap={};
+        [...(existing.injections||[]),...(parsed.injections||[])].forEach(i=>iMap[i.date]=i);
+        merged.injections = Object.values(iMap).sort((a,b)=>a.date.localeCompare(b.date));
+      }
+      // Merge measures (deduplicate by date)
+      if(existing.measures || parsed.measures){
+        const mMap={};
+        [...(existing.measures||[]),...(parsed.measures||[])].forEach(m=>mMap[m.date]=m);
+        merged.measures = Object.values(mMap).sort((a,b)=>a.date.localeCompare(b.date));
+      }
+
+      save(merged);
+      renderFoods(); updateTotals(); renderExList();
+      renderInjBanner(); renderInjPage(); renderWeightPage(); renderHHist();
+
+      // Count imported days
+      const days = Object.keys(parsed).filter(k=>k.match(/^\d{4}-\d{2}-\d{2}/)).length;
+      toast(`✅ 匯入成功！共 ${days} 天紀錄`);
+    }catch(err){
+      console.error('Import error:', err);
+      console.error('File content preview:', ev.target.result?.slice(0,200));
+      toast('❌ 檔案讀取失敗：' + err.message);
+    }
+    e.target.value='';
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+// ── STARTUP ──
+(()=>{
+  const data=load();
+  if(!(data.injections?.length)){
+    setTimeout(()=>toast('👋 記得到注射頁補登 5/9 的第一針！'),800);
+  }
+})();
+</script>
+</body>
+</html>
+f06090;
   --err:#ff6060;--ok:#60d090;--war:#f0c060;
   --r:12px;--rs:8px;
   --fn:'Noto Sans TC',sans-serif;--mo:'Space Mono',monospace;
