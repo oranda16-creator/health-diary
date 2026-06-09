@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>猛健樂日記</title>
+<title>健康飲控日記</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -212,6 +212,11 @@ textarea.inp{resize:vertical}
 .bc{background:var(--acd);color:var(--ac)}.bp{background:rgba(96,180,240,.12);color:var(--pro)}
 .bs{background:rgba(255,96,96,.12);color:var(--err)}.bo{background:rgba(96,208,144,.12);color:var(--ok)}
 .bw{background:rgba(240,192,96,.12);color:var(--war)}.be{background:rgba(96,180,240,.1);color:var(--pro)}
+
+
+.dose-chip{padding:8px 16px;border:1px solid var(--bd);border-radius:8px;background:transparent;color:var(--t2);font-family:var(--mo);font-size:13px;cursor:pointer;transition:all .15s}
+.dose-chip:hover{border-color:var(--ac);color:var(--ac)}
+.dose-chip.on{background:var(--acd);border-color:var(--ac);color:var(--ac);font-weight:700}
 
 /* MODAL */
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
@@ -525,7 +530,13 @@ textarea.inp{resize:vertical}
   <div class="card" style="border-color:var(--ac)">
     <div class="ctitle"><div class="cdot"></div>注射資訊</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:15px">
-      <div><div style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:3px">藥物劑量</div><div style="font-family:var(--mo);font-size:22px;color:var(--ac);font-weight:700">5 mg</div></div>
+      <div>
+        <div style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:3px">藥物劑量</div>
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <div style="font-family:var(--mo);font-size:22px;color:var(--ac);font-weight:700" id="dose-display">— mg</div>
+          <button onclick="editDose()" style="font-size:11px;color:var(--t3);background:none;border:1px solid var(--bd);border-radius:5px;padding:2px 8px;cursor:pointer;font-family:var(--fn)">調整</button>
+        </div>
+      </div>
       <div><div style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:3px">注射週期</div><div style="font-family:var(--mo);font-size:22px;font-weight:700">7 天</div></div>
       <div><div style="font-size:11px;color:var(--t3);font-family:var(--mo);margin-bottom:3px">注射次數</div><div style="font-family:var(--mo);font-size:22px;font-weight:700" id="inj-cnt">0 次</div></div>
     </div>
@@ -704,6 +715,7 @@ document.getElementById('im-date').value=TODAY;
 document.querySelectorAll('.sc').forEach(c=>c.dataset.on='0');
 renderDateNav('meal'); renderDateNav('ex'); renderDateNav('health');
 renderFoods(); updateTotals(); renderExList(); renderInjBanner(); renderInjPage(); renderWeightPage(); renderHHist();
+setDose(getDose());
 
 // ── NAV ──
 function goPage(name,btn){
@@ -1298,7 +1310,7 @@ function renderHistory(){
       <div class="h-section">
         <div class="h-sec-title">注射</div>
         <div style="padding:10px;background:var(--acd2);border:1px solid var(--ac);border-radius:var(--rs);font-size:13px">
-          💉 5mg 猛健樂${inj.site?' · 部位：'+inj.site:''}${inj.note?' · '+inj.note:''}
+          💉 ${getDose()}mg 猛健樂${inj.site?' · 部位：'+inj.site:''}${inj.note?' · '+inj.note:''}
         </div>
       </div>` : '';
 
@@ -1461,6 +1473,37 @@ function renderMeasurePage(){
   });
 }
 
+
+// ── DOSE ──
+function getDose(){
+  return localStorage.getItem('mjl_dose') || '7.5';
+}
+function setDose(v){
+  localStorage.setItem('mjl_dose', v);
+  document.getElementById('dose-display').textContent = v + ' mg';
+}
+function editDose(){
+  const cur = getDose();
+  // Highlight current dose chip
+  document.querySelectorAll('.dose-chip').forEach(c=>{
+    c.classList.toggle('on', c.textContent.trim() === cur+' mg');
+  });
+  document.getElementById('dose-custom').value = cur;
+  document.getElementById('dose-modal').classList.add('on');
+}
+function selectDose(btn, val){
+  document.querySelectorAll('.dose-chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('dose-custom').value = val;
+}
+function saveDose(){
+  const val = document.getElementById('dose-custom').value;
+  if(!val || isNaN(val) || +val <= 0){ toast('請輸入有效劑量'); return; }
+  setDose(val);
+  document.getElementById('dose-modal').classList.remove('on');
+  toast('✅ 劑量已更新為 ' + val + ' mg');
+}
+
 // ── EXPORT / IMPORT ──
 
 function exportData(){
@@ -1552,5 +1595,30 @@ function importData(e){
   }
 })();
 </script>
+
+<!-- Dose Modal -->
+<div class="mbg" id="dose-modal">
+  <div class="modal" style="max-width:340px">
+    <div class="mtit">💉 調整藥物劑量</div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:16px">猛健樂劑量選擇：</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px" id="dose-chips">
+      <button class="dose-chip" onclick="selectDose(this,'2.5')">2.5 mg</button>
+      <button class="dose-chip" onclick="selectDose(this,'5')">5 mg</button>
+      <button class="dose-chip" onclick="selectDose(this,'7.5')">7.5 mg</button>
+      <button class="dose-chip" onclick="selectDose(this,'10')">10 mg</button>
+      <button class="dose-chip" onclick="selectDose(this,'12.5')">12.5 mg</button>
+      <button class="dose-chip" onclick="selectDose(this,'15')">15 mg</button>
+    </div>
+    <div class="mr">
+      <div class="ml">或自訂劑量 (mg)</div>
+      <input class="inp" type="number" id="dose-custom" placeholder="例：7.5" step="0.5" min="0.5" max="20">
+    </div>
+    <div class="mact">
+      <button class="btn" onclick="saveDose()">儲存</button>
+      <button class="btn o" onclick="document.getElementById('dose-modal').classList.remove('on')">取消</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
