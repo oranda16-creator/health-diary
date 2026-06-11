@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>健康日記</title>
+<title>健康飲控紀錄</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -181,7 +181,7 @@ hr.dv{border:none;border-top:1px solid var(--b1);margin:12px 0}
 <body>
 
 <header class="hdr">
-  <div class="logo">猛健樂<span> / 日記</span></div>
+  <div class="logo">飲控紀錄</div>
   <div class="hdr-btns">
     <div id="hdr-date" style="font-family:var(--m);font-size:11px;color:var(--t3);align-self:center"></div>
     <button class="btn o sm" onclick="exportData()" title="匯出">⬇ 匯出</button>
@@ -221,12 +221,10 @@ hr.dv{border:none;border-top:1px solid var(--b1);margin:12px 0}
     <button class="darr" id="mn" onclick="shiftDate('meal',1)">›</button>
   </div>
   <div class="sec">當日總覽</div>
-  <div class="sgrid">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:12px">
     <div class="sbox hi"><div class="sl">已攝取</div><div class="sv" id="tc">0<span class="su2">kcal</span></div><div class="ss" id="trem"></div></div>
     <div class="sbox p"><div class="sl">蛋白質</div><div class="sv" id="tp">0<span class="su2">g</span></div><div class="ss" id="tps"></div></div>
     <div class="sbox c"><div class="sl">碳水</div><div class="sv" id="tca">0<span class="su2">g</span></div><div class="ss" id="tcas"></div></div>
-  </div>
-  <div class="sgrid">
     <div class="sbox su"><div class="sl">糖</div><div class="sv" id="tsu">0<span class="su2">g</span></div><div class="ss" id="tsus"></div></div>
     <div class="sbox f"><div class="sl">脂肪</div><div class="sv" id="tf">0<span class="su2">g</span></div><div class="ss" id="tfs"></div></div>
     <div class="sbox"><div class="sl">淨攝取</div><div class="sv" id="tnet" style="color:var(--t2)">0<span class="su2">kcal</span></div><div class="ss" id="tnets"></div></div>
@@ -434,9 +432,10 @@ hr.dv{border:none;border-top:1px solid var(--b1);margin:12px 0}
   </div>
   <div class="card">
     <div class="ctitle"><div class="cdot"></div>新增量測</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <div><div class="ml">量測日期</div><input class="inp" type="date" id="meas-date"></div>
-      <div style="display:flex;align-items:flex-end;padding-bottom:2px"><div style="font-size:11px;color:var(--t3)">建議週五早上空腹量測</div></div>
+    <div style="margin-bottom:10px">
+      <div class="ml">量測日期</div>
+      <input class="inp" type="date" id="meas-date">
+      <div style="font-size:11px;color:var(--t3);margin-top:4px">建議週五早上空腹量測</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
       <div><div class="ml">腰圍 (cm)</div><input class="inp sm" type="number" id="meas-waist" placeholder="例：80" step="0.1"></div>
