@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>健康飲控紀錄</title>
+<title>飲控紀錄</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -105,6 +105,12 @@ textarea.inp{resize:vertical}
 .wtbl th{text-align:left;padding:6px 8px;font-size:11px;color:var(--t3);font-family:var(--m);font-weight:400;border-bottom:1px solid var(--b1)}
 .wtbl td{padding:8px 8px;border-bottom:1px solid var(--b1);color:var(--t2)}
 .wtbl td:first-child{color:var(--t1);font-family:var(--m)}
+
+.wk-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b1)}
+.wk-range{font-family:var(--m);font-size:12px;color:var(--t2);flex:1}
+.wk-avg{font-family:var(--m);font-size:18px;font-weight:700;color:var(--ac)}
+.wk-diff{font-family:var(--m);font-size:12px;width:60px;text-align:right}
+.wk-cur{background:var(--acd2);border-radius:var(--rs)}
 .wu{color:var(--er)!important;font-family:var(--m)!important}.wd{color:var(--ok)!important;font-family:var(--m)!important}
 /* Goal bar */
 .gbar-wrap{background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:12px;margin-bottom:12px}
@@ -298,6 +304,11 @@ hr.dv{border:none;border-top:1px solid var(--b1);margin:12px 0}
   <div class="card">
     <div class="ctitle"><div class="cdot"></div>體重趨勢</div>
     <div style="position:relative;height:170px"><canvas id="wchart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="ctitle"><div class="cdot"></div>每週平均</div>
+    <div id="week-avg-list"></div>
+    <div class="empty" id="week-avg-empty" style="display:none"><div class="ei">📊</div>累積至少一週的紀錄即顯示週平均</div>
   </div>
   <div class="card">
     <div class="ctitle"><div class="cdot"></div>歷史紀錄</div>
@@ -691,7 +702,7 @@ function updateTotals(){
   const sup=Math.min(Math.round(su/G.sugar*100),100);
   const fp2=Math.min(Math.round(f/G.fat*100),100);
   setBar('bca',cp,null); setBar('bpr',pp,null);
-  setBar('bcarb',cap,c>G.carb); setBar('bsu',sup,su>G.sugar); setBar('bfat',fp2,f>G.fat);
+  setBar('bcarb',cap,c>G.carb,'var(--ca)'); setBar('bsu',sup,su>G.sugar,'var(--wa)'); setBar('bfat',fp2,f>G.fat,'var(--ft)');
   document.getElementById('cpct').textContent=cp+'%'; document.getElementById('ppct').textContent=pp+'%';
   document.getElementById('capct').textContent=cap+'%'; document.getElementById('supct').textContent=sup+'%'; document.getElementById('fpct').textContent=fp2+'%';
   // Donut
@@ -722,9 +733,9 @@ function setStatBoxFt(valId,subId,val,goal){
   el.textContent=ok?`還剩${Math.round(goal-val)}g`:`超標${Math.round(val-goal)}g`; el.style.color=ok?'var(--t3)':'var(--er)';
   document.getElementById(valId).style.color=ok?'var(--ft)':'var(--er)';
 }
-function setBar(id,pct,isOver){
+function setBar(id,pct,isOver,defaultColor){
   const el=document.getElementById(id); el.style.width=pct+'%';
-  if(isOver!==null) el.style.background=isOver?'var(--er)':'';
+  if(isOver!==null) el.style.background=isOver?'var(--er)':defaultColor;
 }
 function drawDonut(p,c,f){
   const cv=document.getElementById('donut'),ctx=cv.getContext('2d');
@@ -822,6 +833,48 @@ function addWeight(){
   renderWeightPage(); toast('✅ 體重已儲存');
 }
 function delWeight(date){const data=load();data.weights=(data.weights||[]).filter(w=>w.date!==date);save(data);renderWeightPage();}
+function getWeekKey(dateStr){
+  // ISO week: Monday as start of week
+  const d=new Date(dateStr+'T00:00:00');
+  const day=(d.getDay()+6)%7; // Mon=0..Sun=6
+  d.setDate(d.getDate()-day);
+  return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`;
+}
+function renderWeekAvg(ws){
+  const cont=document.getElementById('week-avg-list'), empty=document.getElementById('week-avg-empty');
+  if(ws.length<2){cont.innerHTML='';empty.style.display='';return;}
+  empty.style.display='none';
+  // Group by week (Mon-Sun)
+  const groups={};
+  ws.forEach(w=>{
+    const wk=getWeekKey(w.date);
+    if(!groups[wk])groups[wk]=[];
+    groups[wk].push(w.weight);
+  });
+  const weekKeys=Object.keys(groups).sort();
+  const todayWeek=getWeekKey(TODAY);
+  const rows=weekKeys.map((wk,i)=>{
+    const vals=groups[wk];
+    const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
+    const prevWk=i>0?weekKeys[i-1]:null;
+    const prevAvg=prevWk?(groups[prevWk].reduce((a,b)=>a+b,0)/groups[prevWk].length):null;
+    const end=addD(wk,6);
+    const isCur=wk===todayWeek;
+    let diffHtml='';
+    if(prevAvg!==null){
+      const d=avg-prevAvg;
+      diffHtml=`<span class="wk-diff" style="color:${d<0?'var(--ok)':d>0?'var(--er)':'var(--t3)'}">${d>0?'▲':d<0?'▼':'–'}${Math.abs(d).toFixed(1)}</span>`;
+    } else {
+      diffHtml='<span class="wk-diff"></span>';
+    }
+    return `<div class="wk-row${isCur?' wk-cur':''}" style="${isCur?'padding-left:8px;padding-right:8px':''}">
+      <span class="wk-range">${wk.slice(5)} ~ ${end.slice(5)}${isCur?' <span class="tpill">本週</span>':''} <span style="color:var(--t3)">(${vals.length}筆)</span></span>
+      <span class="wk-avg">${avg.toFixed(1)}<span style="font-size:11px;color:var(--t2)">kg</span></span>
+      ${diffHtml}
+    </div>`;
+  }).reverse().join('');
+  cont.innerHTML=rows;
+}
 function renderWeightPage(){
   const data=load(),ws=data.weights||[],tbody=document.getElementById('wtbody'),empty=document.getElementById('w-empty');
   const latest=ws.length?ws[ws.length-1]:null, first=ws.length?ws[0]:null;
@@ -833,6 +886,7 @@ function renderWeightPage(){
     const r=latest.weight-G.goalW;
     document.getElementById('gw-r').textContent=r>0?`還差 ${r.toFixed(1)}kg`:'🎉 已達標！';
   }
+  renderWeekAvg(ws);
   tbody.innerHTML='';
   if(!ws.length){empty.style.display='';renderWChart([]);return;}
   empty.style.display='none';
